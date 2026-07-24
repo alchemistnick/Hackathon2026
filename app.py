@@ -17,7 +17,7 @@ st.markdown("""
     
     /* Banner/Encabezado Superior Rediseñado para Logo y Texto */
     .hero-header {
-        background: linear-gradient(135deg, #07090C 0%, #151A24 100%); /* Fondo azul navy muy oscuro */
+        background: linear-gradient(135deg, #123244 0%, #151A24 100%);
         color: #FFFFFF;
         padding: 1.5rem 1.8rem; /* Aumentado el padding para el logo legible */
         border-radius: 12px;
