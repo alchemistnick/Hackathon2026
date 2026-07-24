@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 from datetime import datetime
 
-# Configuración de página
+# Configuración de página - Aquí puedes poner un icono simple
 st.set_page_config(page_title="Evaluación Hackathon", page_icon="🏆", layout="centered")
 
 # ==============================================================================
@@ -19,18 +19,18 @@ st.markdown("""
     .hero-header {
         background: linear-gradient(135deg, #07090C 0%, #151A24 100%); /* Fondo azul navy muy oscuro */
         color: #FFFFFF;
-        padding: 1rem 1.8rem;
+        padding: 1.5rem 1.8rem; /* Aumentado el padding para el logo legible */
         border-radius: 12px;
-        margin-bottom: 1.5rem;
+        margin-bottom: 2rem;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         display: flex;
         align-items: center; /* Alineación vertical */
         justify-content: flex-start; /* Logo a la izquierda */
     }
     .header-logo {
-        max-height: 80px; /* control de tamaño del logo */
+        max-height: 120px; /* Aumentado el tamaño del logo para legibilidad */
         width: auto;
-        margin-right: 2rem; /* separación entre logo y texto */
+        margin-right: 2.5rem; /* separación entre logo y texto */
     }
     .header-text {
         flex-grow: 1; /* ocupa el resto del espacio */
@@ -50,15 +50,8 @@ st.markdown("""
     }
 
     /* Tarjetas de sección (para Datos Generales y Criterios) */
-    div[data-testid="stForm"] > div > div {
-        background-color: #FFFFFF;
-        padding: 2rem;
-        border-radius: 16px;
-        border: 1px solid #E2E8F0;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        margin-bottom: 1.5rem;
-    }
-
+    /* He eliminado las reglas que generaban los recuadros blancos cuadrangulares */
+    
     /* Tarjeta para la métrica del Puntaje Total */
     div[data-testid="stMetric"] {
         background-color: #FFFFFF;
@@ -95,9 +88,10 @@ WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyM8feFteFynfKVBk_L_ypJ6N
 # ==============================================================================
 
 # Header Principal Estilizado con Logo e Institucional
+# HE ACTUALIZADO LA RUTA DE LA IMAGEN src PARA USAR EL RAW DE GITHUB Y AJUSTADO EL TAMAÑO
 st.markdown("""
     <div class="hero-header">
-        <img src="./logo.png" class="header-logo" alt="Organización Logo">
+        <img src="https://raw.githubusercontent.com/alchemistnick/Hackathon2026/master/logo.png" class="header-logo" alt="Organización Logo">
         <div class="header-text">
             <h1>🏆 Rúbrica de Evaluación Hackathon</h1>
             <p>Portal Oficial del Jurado</p>
@@ -105,37 +99,36 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# Lógica del Formulario con el diseño moderno
-with st.form("form_evaluacion"):
-    # Sección 1: Datos Generales
-    st.markdown("<h3>📋 Datos Generales</h3>", unsafe_allow_html=True)
-    col1, col2 = st.columns(2)
-    with col1:
-        evaluador = st.text_input("Evaluador*", placeholder="Ej. Gustavo")
-    with col2:
-        equipo = st.text_input("Equipo*", placeholder="Ej. Nicolas")
+# Lógica del Formulario (He quitado st.form para simplificar y limpiar el diseño)
+# Sección 1: Datos Generales
+st.markdown("<h3>📋 Datos Generales</h3>", unsafe_allow_html=True)
+col1, col2 = st.columns(2)
+with col1:
+    evaluador = st.text_input("Evaluador*", placeholder="Ej. Gustavo")
+with col2:
+    equipo = st.text_input("Equipo*", placeholder="Ej. Nicolas")
 
-    st.markdown("<hr>", unsafe_allow_html=True)
+st.divider()
 
-    # Sección 2: Criterios de Evaluación (Mantenidos exactamente)
-    st.markdown("<h3>📊 Criterios de Evaluación</h3>", unsafe_allow_html=True)
+# Sección 2: Criterios de Evaluación (Mantenidos exactamente)
+st.markdown("<h3>📊 Criterios de Evaluación</h3>", unsafe_allow_html=True)
 
-    c1 = st.slider("1. Escenario", 0, 15, 10)
-    c2 = st.slider("2. Infraestructura y Energía", 0, 15, 10)
-    c3 = st.slider("3. Comunicación e Información", 0, 15, 10)
-    c4 = st.slider("4. Coordinación y Logística", 0, 15, 10)
-    c5 = st.slider("5. Atención a la Población", 0, 15, 10)
-    c6 = st.slider("6. Operación de Emergencia", 0, 15, 10)
-    c7 = st.slider("7. Enfoque Interdisciplinario", 0, 10, 5)
+c1 = st.slider("1. Escenario", 0, 15, 10)
+c2 = st.slider("2. Infraestructura y Energía", 0, 15, 10)
+c3 = st.slider("3. Comunicación e Información", 0, 15, 10)
+c4 = st.slider("4. Coordinación y Logística", 0, 15, 10)
+c5 = st.slider("5. Atención a la Población", 0, 15, 10)
+c6 = st.slider("6. Operación de Emergencia", 0, 15, 10)
+c7 = st.slider("7. Enfoque Interdisciplinario", 0, 10, 5)
 
-    total_score = c1 + c2 + c3 + c4 + c5 + c6 + c7
+total_score = c1 + c2 + c3 + c4 + c5 + c6 + c7
 
-    st.metric(label="🎯 Puntaje Total", value=f"{total_score} pts")
+st.metric(label="🎯 Puntaje Total", value=f"{total_score} pts")
 
-    observaciones = st.text_area("💬 Observaciones", placeholder="Comentarios...")
+observaciones = st.text_area("💬 Observaciones", placeholder="Comentarios...")
 
-    # Botón de envío (Mantenido funcionalmente)
-    submitted = st.form_submit_button("🚀 Guardar Evaluación", type="primary", use_container_width=True)
+# Botón de envío estilizado (Se mantiene funcionalmente)
+submitted = st.button("🚀 Guardar Evaluación", type="primary", use_container_width=True)
 
 # Lógica de envío al Webhook (Mantenida intacta)
 if submitted:
