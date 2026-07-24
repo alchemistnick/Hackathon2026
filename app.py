@@ -2,45 +2,48 @@ import streamlit as st
 import requests
 from datetime import datetime
 
-# Configuración de página - Aquí puedes poner un icono simple
+# 1. Configuración de página
 st.set_page_config(page_title="Evaluación Hackathon", page_icon="🏆", layout="centered")
 
 # ==============================================================================
-# ESTILOS CSS PERSONALIZADOS (Capas de diseño sin alterar la lógica)
+# ESTILOS CSS - PALETA DE COLOR Y COMPOSICIÓN INSTITUCIONAL
 # ==============================================================================
 st.markdown("""
 <style>
-    /* Fondo general suave */
+    /* 1. Fondo de la Aplicación (Gris Hielo Pizarra) */
     .stApp {
-        background-color: #F8FAFC;
+        background-color: #F1F5F9;
+        font-family: 'Inter', sans-serif;
     }
     
-    /* Banner/Encabezado Superior Rediseñado para Logo y Texto */
+    /* 2. Banner/Encabezado Superior (Azul Noche / Pizarra) */
     .hero-header {
-        background: linear-gradient(135deg, #123244 0%, #151A24 100%);
+        background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
         color: #FFFFFF;
-        padding: 1.5rem 1.8rem; /* Aumentado el padding para el logo legible */
-        border-radius: 12px;
+        padding: 1.5rem 2rem;
+        border-radius: 14px;
         margin-bottom: 2rem;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.2);
         display: flex;
-        align-items: center; /* Alineación vertical */
-        justify-content: flex-start; /* Logo a la izquierda */
+        align-items: center;
+        justify-content: flex-start;
     }
     .header-logo {
-        max-height: 120px; /* Aumentado el tamaño del logo para legibilidad */
+        max-height: 110px;
         width: auto;
-        margin-right: 2.5rem; /* separación entre logo y texto */
+        margin-right: 2rem;
+        filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.3));
     }
     .header-text {
-        flex-grow: 1; /* ocupa el resto del espacio */
-        text-align: center; /* centra el texto en su espacio */
+        flex-grow: 1;
+        text-align: center;
     }
     .hero-header h1 {
         color: #FFFFFF !important;
         font-size: 1.8rem;
         font-weight: 700;
         margin: 0;
+        letter-spacing: -0.02em;
     }
     .hero-header p {
         color: #94A3B8;
@@ -49,26 +52,54 @@ st.markdown("""
         margin-bottom: 0;
     }
 
-    /* Tarjetas de sección (para Datos Generales y Criterios) */
-    /* He eliminado las reglas que generaban los recuadros blancos cuadrangulares */
-    
-    /* Tarjeta para la métrica del Puntaje Total */
-    div[data-testid="stMetric"] {
-        background-color: #FFFFFF;
-        padding: 1.2rem 1.8rem;
-        border-radius: 12px;
-        border: 1px solid #E2E8F0;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
-        text-align: center;
-        margin-top: 1rem;
+    /* 3. Títulos de Secciones */
+    h3 {
+        color: #0F172A !important;
+        font-size: 1.25rem !important;
+        font-weight: 600 !important;
+        margin-top: 1rem !important;
+        margin-bottom: 1rem !important;
     }
 
-    /* Botón de envío estilizado */
+    /* 4. Estilo de Inputs y Cajas de Texto */
+    .stTextInput input, .stTextArea textarea {
+        background-color: #FFFFFF !important;
+        border: 1px solid #CBD5E1 !important;
+        border-radius: 8px !important;
+        color: #0F172A !important;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    }
+    .stTextInput input:focus, .stTextArea textarea:focus {
+        border-color: #2563EB !important;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
+    }
+
+    /* 5. Tarjeta del Puntaje Total */
+    div[data-testid="stMetric"] {
+        background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
+        padding: 1.2rem 1.8rem;
+        border-radius: 12px;
+        border: 1px solid #CBD5E1;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        text-align: center;
+        margin: 1.5rem 0;
+    }
+    div[data-testid="stMetric"] label {
+        color: #475569 !important;
+        font-weight: 600;
+    }
+    div[data-testid="stMetric"] div[data-testid="stMetricValue"] {
+        color: #1E3A8A !important;
+        font-weight: 800;
+    }
+
+    /* 6. Botón de Envío */
     div.stButton > button[kind="primary"] {
         background: linear-gradient(90deg, #2563EB 0%, #1D4ED8 100%);
+        color: #FFFFFF;
         border: none;
         border-radius: 8px;
-        padding: 0.75rem 1rem;
+        padding: 0.85rem 1rem;
         font-weight: 600;
         font-size: 1.05rem;
         box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
@@ -77,21 +108,27 @@ st.markdown("""
     div.stButton > button[kind="primary"]:hover {
         background: linear-gradient(90deg, #1D4ED8 0%, #1E40AF 100%);
         box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+        transform: translateY(-1px);
+    }
+
+    /* Líneas divisorias más suaves */
+    hr {
+        border-color: #CBD5E1 !important;
+        margin: 1.8rem 0 !important;
     }
 </style>
 """, unsafe_allow_html=True)
 
 # ==============================================================================
-# CONFIGURACIÓN PRIVADA DE WEBHOOK (Mantenida intacta)
+# CONFIGURACIÓN PRIVADA DE WEBHOOK
 # ==============================================================================
 WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyM8feFteFynfKVBk_L_ypJ6NP08ufGHODv6iGu8v7E8jkUoSRuic54mgPmYfvn2m5gEg/exec"
 # ==============================================================================
 
-# Header Principal Estilizado con Logo e Institucional
-# HE ACTUALIZADO LA RUTA DE LA IMAGEN src PARA USAR EL RAW DE GITHUB Y AJUSTADO EL TAMAÑO
+# Encabezado Principal (Usa ?v=2 para refrescar la caché de la imagen)
 st.markdown("""
     <div class="hero-header">
-        <img src="https://raw.githubusercontent.com/alchemistnick/Hackathon2026/master/logo.png" class="header-logo" alt="Organización Logo">
+        <img src="https://raw.githubusercontent.com/alchemistnick/Hackathon2026/master/logo.png?v=2" class="header-logo" alt="Organización Logo">
         <div class="header-text">
             <h1>🏆 Rúbrica de Evaluación Hackathon</h1>
             <p>Portal Oficial del Jurado</p>
@@ -99,7 +136,6 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# Lógica del Formulario (He quitado st.form para simplificar y limpiar el diseño)
 # Sección 1: Datos Generales
 st.markdown("<h3>📋 Datos Generales</h3>", unsafe_allow_html=True)
 col1, col2 = st.columns(2)
@@ -110,7 +146,7 @@ with col2:
 
 st.divider()
 
-# Sección 2: Criterios de Evaluación (Mantenidos exactamente)
+# Sección 2: Criterios de Evaluación
 st.markdown("<h3>📊 Criterios de Evaluación</h3>", unsafe_allow_html=True)
 
 c1 = st.slider("1. Escenario", 0, 15, 10)
@@ -127,10 +163,12 @@ st.metric(label="🎯 Puntaje Total", value=f"{total_score} pts")
 
 observaciones = st.text_area("💬 Observaciones", placeholder="Comentarios...")
 
-# Botón de envío estilizado (Se mantiene funcionalmente)
+st.divider()
+
+# Botón de envío
 submitted = st.button("🚀 Guardar Evaluación", type="primary", use_container_width=True)
 
-# Lógica de envío al Webhook (Mantenida intacta)
+# Lógica de envío al Webhook
 if submitted:
     if not evaluador.strip() or not equipo.strip():
         st.warning("⚠️ Por favor completa el Evaluador y el Equipo.")
